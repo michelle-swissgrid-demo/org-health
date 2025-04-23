@@ -1,1 +1,51 @@
+name: Enforce Community Health Files
 
+on:
+  workflow_dispatch: # adds a button so that it can run manually or it can be scheduled (below)
+  schedule:
+    - cron: '0 1 * * *'  # Runs daily at 1:00 AM UTC
+
+jobs:
+  check-repos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup
+        run: |
+          echo "Starting repo health check..."
+
+      - name: Run health check
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          ORG_NAME: michelle-swissgrid-demo
+        run: |
+          REQUIRED_FILES=("README.md" "LICENSE" "CODE_OF_CONDUCT.md")
+
+          repos=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            https://api.github.com/orgs/$ORG_NAME/repos?per_page=100 | jq -r '.[].name')
+
+          for repo in $repos; do
+            echo "Checking repo: $repo"
+            missing=0
+
+            for file in "${REQUIRED_FILES[@]}"; do
+              code=$(curl -s -o /dev/null -w "%{http_code}" \
+                -H "Authorization: token $GH_TOKEN" \
+                https://api.github.com/repos/$ORG_NAME/$repo/contents/$file)
+
+              if [[ "$code" != "200" ]]; then
+                echo "❌ Missing $file in $repo"
+                missing=$((missing+1))
+              fi
+            done
+
+            if [[ "$missing" -gt 0 ]]; then
+              echo "⚠️ Archiving $repo due to missing files..."
+              curl -s -X PATCH \
+                -H "Authorization: token $GH_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d '{"archived": true}' \
+                https://api.github.com/repos/$ORG_NAME/$repo
+            else
+              echo "✅ $repo passed the check."
+            fi
+          done
