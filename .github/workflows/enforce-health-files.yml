@@ -28,13 +28,23 @@ jobs:
             missing=0
 
             for file in "${REQUIRED_FILES[@]}"; do
-              code=$(curl -s -o /dev/null -w "%{http_code}" \
-                -H "Authorization: token $GH_TOKEN" \
-                https://api.github.com/repos/$ORG_NAME/$repo/contents/$file)
+              found=false
 
-              if [[ "$code" != "200" ]]; then
+              for path in "$file" ".github/$file" "docs/$file"; do
+                code=$(curl -s -o /dev/null -w "%{http_code}" \
+                  -H "Authorization: token $GH_TOKEN" \
+                  https://api.github.com/repos/$ORG_NAME/$repo/contents/$path)
+
+                if [[ "$code" == "200" ]]; then
+                  found=true
+                  break
+                fi
+              done
+
+              if [[ "$found" == false ]]; then
                 echo "❌ Missing $file in $repo"
                 missing=$((missing+1))
+                MISSING_FILES+="- $file"$'\n'
               fi
             done
 
@@ -42,7 +52,7 @@ jobs:
               echo "⚠️ Archiving $repo due to missing files..."
               gh api -X POST "repos/$ORG_NAME/$repo/issues" \
                 -f title="📁 Repository Archived Due to Missing Community Health Files" \
-                -f body="This repository has been archived because it is missing $missing required community health files:\n\n$MISSING_FILES\nPlease add the missing files and contact the org maintainers to request unarchiving."
+                -f body="This repository has been archived because it is missing required community health files:\n\n$MISSING_FILES\nPlease add the missing files and contact the org maintainers to request unarchiving."
               curl -s -X PATCH \
                 -H "Authorization: token $GH_TOKEN" \
                 -H "Content-Type: application/json" \
