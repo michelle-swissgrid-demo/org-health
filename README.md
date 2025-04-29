@@ -21,20 +21,13 @@
 - The current .github repository contains all the health files presented above
 - Since it is in the .github repository of an organization, all the repositories in the organization inherit it. 
 
-**Enforcement of health files**
+
+## Enforcement of Health Files
 Enforcement: You need to enforce that every new repository in the whole organization (not just yours) contain these documents and if they do not, they should be disabled. Using GitHub Actions workflow, could you implement a GitHub Action that that does it across the whole GitHub organization?
 - The workflow in `org-health` specifies a few health files that a repository must have, not just inherited but their own custom ones.
 - If they are found to not have the health file, they are moved to public archive. This can be seen on the repo `unhealthy`, since it doesn't have the health files specified in the workflow, it is moved to public archive after we run the action.
 
-**Communication Strategy**
-Users in the company currently do not know about these requirements. How could you communicate the above to the users and what should that communication include?
-- Explanation to what health files are and why they are important in every repository
-- Default templates for each type of health file, so they can be added easily to each repository. 
-- Example repositories that have added the health files correctly so that they can compare. 
-
-
-## Enforcement of Health Files
-A workflow is used to iterate over all repositories in the organisation and check whether they have added specific custom health files. The workflow needs admin-level permissions in order to archive other repositoresi within the organization. This is done by adding a secret to the repository so that it has the permissions to make admin-level changes in the organization, otherwise it would not be able to archive other repositories in the organization. Only users (who are admins) can perform these actions, thus we use a personal access token (of the admin) in the repository to give the scripts used the ability to modify other repositories of the organization. 
+A workflow (found in `.github/workflow/enforce-health-files.yml`) is used to iterate over all repositories in the organisation and check whether they have added specific custom health files. The workflow needs admin-level permissions in order to archive other repositoresi within the organization. This is done by adding a secret to the repository so that it has the permissions to make admin-level changes in the organization, otherwise it would not be able to archive other repositories in the organization. Only users (who are admins) can perform these actions, thus we use a personal access token (of the admin) in the repository to give the scripts used the ability to modify other repositories of the organization. 
 
 On the admin account:
 1. GitHub Account > Settings > Developer settings > Personal access tokens
@@ -46,3 +39,28 @@ For the enforcer repository:
 2. Create New repository secret
 3. Name it `GH_TOKEN` and add the personal access token as the secret
 4. Now when `GH_TOKEN` is mentioned in the workflow, it is referring to the secret added to this repository
+
+## Communication Strategy
+
+**Communication Strategy**
+Users in the company currently do not know about these requirements. How could you communicate the above to the users and what should that communication include?
+
+1. Internal Message:
+  - Explanation to what health files are and 
+  - why they are important in every repository
+  - How this will affect users
+  - When this will be enacted (grace period)
+  - Links to helpful resources
+2. Documentation Page:
+  - A checklist of required health files
+  - Default templates for each type of health file, so they can be added easily to each repository. 
+  - Example repositories that have added the health files correctly so that they can compare. 
+  - FAQs
+3. Demo:
+  - A short video demo that explains health files and showing the full process of adding them to repositories
+  - A live version is also possible. 
+4. Trial Rollout + Feedback
+  - Rollout to one suborganization in swissgrid
+  - Collect feedback and use it to make instructions/documentation more clear. 
+  - This also allows the FAQ section to be more helpful. 
+
