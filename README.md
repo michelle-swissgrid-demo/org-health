@@ -1,7 +1,8 @@
 # org-health
 
 ## Health Files
-**Explore what these health files are and create a list of recommended documentation files essential for every GitHub repository and specify what content each of this document should include.**
+> Research: Explore what these health files are and create a list of recommended documentation files essential for every GitHub repository and specify what content each of this document should include.
+
 - Community health files are a set of files that provide guidance and templates for maintaining a healthy and collaborative open source project. They define and standardize aspects of project development and community interaction. 
 - GitHub allows people to create default community health files by adding them to a public .github repo of the organization. Then for any repository owned by a user of that organization, it will look for the community health files in the following order: the `.github` folder, the root, and then the `docs` folder. If a health file can not be found, it will use the default from the special repository.
 - For example, if a project does not have the `CONTRIBUTING.md` file, when users create an issue/PR, they will see a link to the default `CONTRIBUTING.md` of the `.github` repo. However, if the repo does have the `.github/ISSUE_TEMPLATE` folder, the defaults will not be used. This allows repo maintainers to override the defaults. 
@@ -17,13 +18,15 @@
 - `SUPPORT.md`: A SUPPORT file lets people know about ways to get help with your project
 - `FUNDING.md`: A FUNDING file displays a sponsor button in your repository to increase the visibility of funding options for your open source project.
 
-**Demo: Create a demo respoitory with these files and present it to us.**
+## Demo
+> Demo: Create a demo respoitory with  these files and present it to us.
+
 - The current .github repository contains all the health files presented above
 - Since it is in the .github repository of an organization, all the repositories in the organization inherit it. 
 
 
 ## Enforcement of Health Files
-Enforcement: You need to enforce that every new repository in the whole organization (not just yours) contain these documents and if they do not, they should be disabled. Using GitHub Actions workflow, could you implement a GitHub Action that that does it across the whole GitHub organization?
+> Enforcement: You need to enforce that every new repository in the whole organization (not just yours) contain these documents and if they do not, they should be disabled. Using GitHub Actions workflow, could you implement a GitHub Action that that does it across the whole GitHub organization?
 - The workflow in `org-health` specifies a few health files that a repository must have, not just inherited but their own custom ones.
 - If they are found to not have the health file, they are moved to public archive. This can be seen on the repo `unhealthy`, since it doesn't have the health files specified in the workflow, it is moved to public archive after we run the action.
 
@@ -41,9 +44,7 @@ For the enforcer repository:
 4. Now when `GH_TOKEN` is mentioned in the workflow, it is referring to the secret added to this repository
 
 ## Communication Strategy
-
-**Communication Strategy**
-Users in the company currently do not know about these requirements. How could you communicate the above to the users and what should that communication include?
+> Communication Strategy: Users in the company currently do not know about these requirements. How could you communicate the above to the users and what should that communication include?
 
 1. Internal Message:
   - Explanation to what health files are and 
