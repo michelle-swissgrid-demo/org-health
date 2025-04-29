@@ -24,7 +24,7 @@
 **Enforcement of health files**
 Enforcement: You need to enforce that every new repository in the whole organization (not just yours) contain these documents and if they do not, they should be disabled. Using GitHub Actions workflow, could you implement a GitHub Action that that does it across the whole GitHub organization?
 - The workflow in `org-health` specifies a few health files that a repository must have, not just inherited but their own custom ones.
-- If they are found to not have the health file, they are moved to public archive. 
+- If they are found to not have the health file, they are moved to public archive. This can be seen on the repo `unhealthy`, since it doesn't have the health files specified in the workflow, it is moved to public archive after we run the action.
 
 **Communication Strategy**
 Users in the company currently do not know about these requirements. How could you communicate the above to the users and what should that communication include?
