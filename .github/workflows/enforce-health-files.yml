@@ -57,7 +57,7 @@ jobs:
                 echo "⚠️ Archiving $repo due to missing files..."
                 gh api -X POST "repos/$ORG_NAME/$repo/issues" \
                   -f title="📁 Repository Archived Due to Missing Community Health Files" \
-                  -f body="This repository has been archived because it is missing required community health files:\n $MISSING_FILES \n Please add the missing files and contact the org maintainers to request unarchiving."
+                  -f body="This repository has been archived because it is missing required community health files: \n $MISSING_FILES Please add the missing files and contact the org maintainers to request unarchiving."
                 curl -s -X PATCH \
                   -H "Authorization: token $GH_TOKEN" \
                   -H "Content-Type: application/json" \
