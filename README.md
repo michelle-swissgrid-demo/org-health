@@ -11,12 +11,14 @@
 
 **The most general community health files are below:**
 - Issue and pull request templates and config.yml: Issue and pull request templates customize and standardize the information you'd like contributors to include when they open issues and pull requests in your repository. If an issue template sets a label, that label must be created in your .github repository and any repositories where the template will be used.
+- `README.md`: A README contains general descriptions of the repository, the purpose, and guides.
 - `CODE_OF_CONDUCT.md`: A CODE_OF_CONDUCT file defines standards for how to engage in a community.
 - `CONTRIBUTING.md`: A CONTRIBUTING file communicates how people should contribute to your project.
-- `GOVERNANCE.md`: A GOVERNANCE file lets people know about how your proj`ect is governed. For example, it might discuss project roles and how decisions are made.
 - `SECURITY.md`: A SECURITY file gives instructions on how to report a security vulnerability in your project and description that hyperlinks the file. 
-- `SUPPORT.md`: A SUPPORT file lets people know about ways to get help with your project
-- `FUNDING.md`: A FUNDING file displays a sponsor button in your repository to increase the visibility of funding options for your open source project.
+- `SUPPORT.md` (optional): A SUPPORT file lets people know about ways to get help with your project
+- `FUNDING.md` (optional): A FUNDING file displays a sponsor button in your repository to increase the visibility of funding options for your open source project.
+- `GOVERNANCE.md` (optional): A GOVERNANCE file lets people know about how your proj`ect is governed. For example, it might discuss project roles and how decisions are made.
+- `LICENSE` (optional): license and terms for reuse. 
 
 ## Demo
 > Demo: Create a demo respoitory with  these files and present it to us.
@@ -58,10 +60,50 @@ For the enforcer repository:
   - Example repositories that have added the health files correctly so that they can compare. 
   - FAQs
 3. Demo:
-  - A short video demo that explains health files and showing the full process of adding them to repositories
-  - A live version is also possible. 
+  - If the above is considered insufficient, a short video demo that explains health files and showing the full process of adding them to repositories. 
+  - Depending on the culture of the company, a live version may be preferred. 
 4. Trial Rollout + Feedback
-  - Rollout to one suborganization in swissgrid
+  - Rollout to one suborganization in swissgrid.
   - Collect feedback and use it to make instructions/documentation more clear. 
   - This also allows the FAQ section to be more helpful. 
 
+### Internal Message
+The internal message below can be formatted as an email or as an internal confluence article which is sent out to inform people of the change. 
+```md
+# [Action Required] New GitHub Repository Standards for Community Health Files
+
+Dear all,
+To improve clarity, collaboration, and long-term maintainability across our GitHub repositories, we’re rolling out a new standard requiring essential community health documentation in current and future repositories across the organization.
+
+## What’s Changing?
+
+Starting [specific date], every repository must include the following files:
+
+1. `README.md` – Project overview, usage, and setup instructions  
+2. `CODE_OF_CONDUCT.md` – Expected behavior and escalation channels  
+3. `CONTRIBUTING.md` – How to contribute (PR process, branching, testing, etc.)  
+4. `SECURITY.md` – How to report vulnerabilities securely  
+5. `.github/ISSUE_TEMPLATE.md` – Templates for filing issues or requests
+
+These files help internal teams and external collaborators quickly understand how to engage with a repository/porject and align with best practices used across the organization.
+
+
+## How is this enforced?
+
+We’ve implemented a **GitHub Action that monitors all new repositories** in the organization. Repositories missing one or more required files will:
+
+* Receive an automatically generated issue outlining the missing files  
+* Be archived until they meet the documentation standard
+
+This ensures consistency and reduces technical debt from the start.
+
+## How to Comply
+
+1. Use [internal example] or follow [checklist].
+2. Copy the standard files into your repository during or right after creation.
+
+If additional help is needed, visit [internal wiki page] where there is a checklist and explanation for the health files or reach out to [support email]. 
+
+Thanks for helping make our engineering practices and organisation more sustainable!  
+– The Engineering Team
+```
