@@ -3,7 +3,7 @@ name: Enforce Community Health Files
 on:
   workflow_dispatch: # adds a button so that it can run manually or it can be scheduled (below)
   schedule:
-    - cron: '0 1 * * *'  # Runs daily at 1:00 AM UTC
+    - cron: '0 1 * * *'
 
 jobs:
   check-repos:
@@ -48,17 +48,37 @@ jobs:
               fi
             done
 
+            # Get archive status
+            archived=$(curl -s -H "Authorization: token $GH_TOKEN" \
+              https://api.github.com/repos/$ORG_NAME/$repo | jq -r '.archived')
+
             if [[ "$missing" -gt 0 ]]; then
-              echo "⚠️ Archiving $repo due to missing files..."
-              gh api -X POST "repos/$ORG_NAME/$repo/issues" \
-                -f title="📁 Repository Archived Due to Missing Community Health Files" \
-                -f body="This repository has been archived because it is missing required community health files:\n\n$MISSING_FILES\nPlease add the missing files and contact the org maintainers to request unarchiving."
-              curl -s -X PATCH \
-                -H "Authorization: token $GH_TOKEN" \
-                -H "Content-Type: application/json" \
-                -d '{"archived": true}' \
-                https://api.github.com/repos/$ORG_NAME/$repo
+              if [[ "$archived" == "false" ]]; then
+                echo "⚠️ Archiving $repo due to missing files..."
+                gh api -X POST "repos/$ORG_NAME/$repo/issues" \
+                  -f title="📁 Repository Archived Due to Missing Community Health Files" \
+                  -f body="This repository has been archived because it is missing required community health files:\n\n$MISSING_FILES\nPlease add the missing files and contact the org maintainers to request unarchiving."
+                curl -s -X PATCH \
+                  -H "Authorization: token $GH_TOKEN" \
+                  -H "Content-Type: application/json" \
+                  -d '{"archived": true}' \
+                  https://api.github.com/repos/$ORG_NAME/$repo
+              else
+                echo "📁 $repo is already archived."
+              fi
             else
               echo "✅ $repo passed the check."
+
+              if [[ "$archived" == "true" ]]; then
+                echo "Unarchiving $repo as all required files are present..."
+                gh api -X POST "repos/$ORG_NAME/$repo/issues" \
+                  -f title="✅ Repository Unarchived After Meeting Community Health Requirements" \
+                  -f body="This repository has been unarchived automatically because it now includes all required community health files."
+                curl -s -X PATCH \
+                  -H "Authorization: token $GH_TOKEN" \
+                  -H "Content-Type: application/json" \
+                  -d '{"archived": false}' \
+                  https://api.github.com/repos/$ORG_NAME/$repo
+              fi
             fi
           done
