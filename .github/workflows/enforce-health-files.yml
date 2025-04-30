@@ -68,17 +68,5 @@ jobs:
               fi
             else
               echo "✅ $repo passed the check."
-
-              if [[ "$archived" == "true" ]]; then
-                echo "Unarchiving $repo as all required files are present..."
-                gh api -X POST "repos/$ORG_NAME/$repo/issues" \
-                  -f title="✅ Repository Unarchived After Meeting Community Health Requirements" \
-                  -f body="This repository has been unarchived automatically because it now includes all required community health files."
-                curl -s -X PATCH \
-                  -H "Authorization: token $GH_TOKEN" \
-                  -H "Content-Type: application/json" \
-                  -d '{"archived": false}' \
-                  https://api.github.com/repos/$ORG_NAME/$repo
-              fi
             fi
           done
