@@ -20,10 +20,24 @@ jobs:
         run: |
           REQUIRED_FILES=("README.md" "LICENSE" "CODE_OF_CONDUCT.md")
 
-          repos=$(curl -s -H "Authorization: token $GH_TOKEN" \
-            https://api.github.com/orgs/$ORG_NAME/repos?per_page=100 | jq -r '.[].name')
+          page=1
+          repos=()
 
-          for repo in $repos; do
+          while :; do
+            result=$(curl -s -H "Authorization: token $GH_TOKEN" \
+              "https://api.github.com/orgs/$ORG_NAME/repos?per_page=100&page=$page")
+
+            names=$(echo "$result" | jq -r '.[].name')
+
+            if [[ -z "$names" ]]; then
+              break
+            fi  
+
+            repos+=($names)
+            ((page++))
+          done
+
+          for repo in "${repos[@]}"; do
             echo "Checking repo: $repo"
             missing=0
 
@@ -41,14 +55,13 @@ jobs:
                 fi
               done
 
-              if [[ "$found" == false ]]; then
+              if [[ "$found" == "false" ]]; then
                 echo "❌ Missing $file in $repo"
                 missing=$((missing+1))
                 MISSING_FILES+="- $file"$'\n'
               fi
             done
 
-            # Get archive status
             archived=$(curl -s -H "Authorization: token $GH_TOKEN" \
               https://api.github.com/repos/$ORG_NAME/$repo | jq -r '.archived')
 
