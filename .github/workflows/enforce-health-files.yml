@@ -15,7 +15,7 @@ jobs:
 
       - name: Run health check
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN2 }}
           ORG_NAME: michelle-swissgrid-demo
         run: |
           REQUIRED_FILES=("README.md" "LICENSE" "CODE_OF_CONDUCT.md")
