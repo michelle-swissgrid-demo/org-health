@@ -2,8 +2,7 @@ name: Enforce Community Health Files
 
 on:
   workflow_dispatch: # adds a button so that it can run manually or it can be scheduled (below)
-  schedule:
-    - cron: '0 1 * * *'
+
 
 jobs:
   check-repos:
